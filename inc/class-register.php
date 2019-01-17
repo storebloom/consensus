@@ -31,6 +31,24 @@ class Register {
 	}
 
 	/**
+	 * Enqueue Assets for front ui.
+	 *
+	 * @action wp_enqueue_scripts
+	 */
+	public function enqueue_assets() {
+		wp_enqueue_script( "{$this->theme->assets_prefix}-front-ui" );
+		wp_add_inline_script( "{$this->theme->assets_prefix}-front-ui", sprintf( 'ConsensusFrontUI.boot( %s );',
+			wp_json_encode( array(
+				'nonce' => wp_create_nonce( $this->theme->meta_prefix ),
+			) )
+		) );
+
+		// Possible theme dependencies.  Will remove if unused.
+		wp_enqueue_script( 'custom-navigation' );
+		wp_enqueue_script( 'custom-skip-link-focus-fix' );
+	}
+
+	/**
 	 * Register theme menus.
 	 *
 	 * @action after_setup_theme
@@ -67,20 +85,169 @@ class Register {
 	}
 
 	/**
-	 * Enqueue Assets for front ui.
+	 * Register the Leadership post type.
 	 *
-	 * @action wp_enqueue_scripts
+	 * @action init
 	 */
-	public function enqueue_assets() {
-		wp_enqueue_script( "{$this->theme->assets_prefix}-front-ui" );
-		wp_add_inline_script( "{$this->theme->assets_prefix}-front-ui", sprintf( 'ConsensusFrontUI.boot( %s );',
-			wp_json_encode( array(
-				'nonce' => wp_create_nonce( $this->theme->meta_prefix ),
-			) )
-		) );
+	public function register_leadership() {
+		$supports = array( 'title', 'editor', 'thumbnail' );
+		$labels = array(
+			'name'                  => esc_html__( ' Leaderships', 'consensus-custom' ),
+			'singular_name'         => esc_html__( ' Leadership', 'consensus-custom' ),
+			'all_items'             => esc_html__( ' Leaderships', 'consensus-custom' ),
+			'menu_name'             => _x( ' Leaderships', 'Admin menu name', 'consensus-custom' ),
+			'add_new'               => esc_html__( 'Add New', 'consensus-custom' ),
+			'add_new_item'          => esc_html__( 'Add new leadership', 'consensus-custom' ),
+			'edit'                  => esc_html__( 'Edit', 'consensus-custom' ),
+			'edit_item'             => esc_html__( 'Edit leadership', 'consensus-custom' ),
+			'new_item'              => esc_html__( 'New leadership', 'consensus-custom' ),
+			'view'                  => esc_html__( 'View leadership', 'consensus-custom' ),
+			'view_item'             => esc_html__( 'View leadership', 'consensus-custom' ),
+			'search_items'          => esc_html__( 'Search leaderships', 'consensus-custom' ),
+			'not_found'             => esc_html__( 'No leaderships found', 'consensus-custom' ),
+			'not_found_in_trash'    => esc_html__( 'No leaderships found in trash', 'consensus-custom' ),
+			'parent'                => esc_html__( 'Parent leadership', 'consensus-custom' ),
+			'featured_image'        => esc_html__( ' Leadership image', 'consensus-custom' ),
+			'set_featured_image'    => esc_html__( 'Set leadership image', 'consensus-custom' ),
+			'remove_featured_image' => esc_html__( 'Remove leadership image', 'consensus-custom' ),
+			'use_featured_image'    => esc_html__( 'Use as leadership image', 'consensus-custom' ),
+			'insert_into_item'      => esc_html__( 'Insert into leadership', 'consensus-custom' ),
+			'uploaded_to_this_item' => esc_html__( 'Uploaded to this leadership', 'consensus-custom' ),
+			'filter_items_list'     => esc_html__( 'Filter leaderships', 'consensus-custom' ),
+			'items_list_navigation' => esc_html__( ' Leaderships navigation', 'consensus-custom' ),
+			'items_list'            => esc_html__( ' Leaderships list', 'consensus-custom' ),
+		);
 
-		// Possible theme dependencies.  Will remove if unused.
-		wp_enqueue_script( 'consensus-custom-navigation', get_template_directory_uri() . '/js/navigation.js', array(), '20151215', true );
-		wp_enqueue_script( 'consensus-custom-skip-link-focus-fix', get_template_directory_uri() . '/js/skip-link-focus-fix.js', array(), '20151215', true );
+		$args = array(
+			'labels'             => $labels,
+			'description'        => esc_html__( 'Leadership Members', 'consensus-custom' ),
+			'public'             => true,
+			'publicly_queryable' => true,
+			'show_ui'            => true,
+			'menu_icon'          => 'dashicons-groups',
+			'show_in_menu'       => true,
+			'query_var'          => true,
+			'rewrite'            => array(
+				'slug' => 'leadership',
+			),
+			'capability_type'    => 'post',
+			'has_archive'        => true,
+			'hierarchical'       => false,
+			'menu_position'      => null,
+			'supports'           => $supports,
+			'show_in_rest'       => true,
+		);
+
+		register_post_type( 'leadership', $args );
+	}
+
+	/**
+	 * Register the Use Case post type.
+	 *
+	 * @action init
+	 */
+	public function register_use_case() {
+		$supports = array( 'title', 'thumbnail' );
+		$labels = array(
+			'name'                  => esc_html__( ' Use Cases', 'consensus-custom' ),
+			'singular_name'         => esc_html__( ' Use Case', 'consensus-custom' ),
+			'all_items'             => esc_html__( ' Use Cases', 'consensus-custom' ),
+			'menu_name'             => _x( ' Use Cases', 'Admin menu name', 'consensus-custom' ),
+			'add_new'               => esc_html__( 'Add New', 'consensus-custom' ),
+			'add_new_item'          => esc_html__( 'Add new use case', 'consensus-custom' ),
+			'edit'                  => esc_html__( 'Edit', 'consensus-custom' ),
+			'edit_item'             => esc_html__( 'Edit use case', 'consensus-custom' ),
+			'new_item'              => esc_html__( 'New use case', 'consensus-custom' ),
+			'view'                  => esc_html__( 'View use case', 'consensus-custom' ),
+			'view_item'             => esc_html__( 'View use case', 'consensus-custom' ),
+			'search_items'          => esc_html__( 'Search use cases', 'consensus-custom' ),
+			'not_found'             => esc_html__( 'No use cases found', 'consensus-custom' ),
+			'not_found_in_trash'    => esc_html__( 'No use cases found in trash', 'consensus-custom' ),
+			'parent'                => esc_html__( 'Parent use case', 'consensus-custom' ),
+			'featured_image'        => esc_html__( ' Use Case image', 'consensus-custom' ),
+			'set_featured_image'    => esc_html__( 'Set use case image', 'consensus-custom' ),
+			'remove_featured_image' => esc_html__( 'Remove use case image', 'consensus-custom' ),
+			'use_featured_image'    => esc_html__( 'Use as use case image', 'consensus-custom' ),
+			'insert_into_item'      => esc_html__( 'Insert into use case', 'consensus-custom' ),
+			'uploaded_to_this_item' => esc_html__( 'Uploaded to this use case', 'consensus-custom' ),
+			'filter_items_list'     => esc_html__( 'Filter use cases', 'consensus-custom' ),
+			'items_list_navigation' => esc_html__( ' Use Cases navigation', 'consensus-custom' ),
+			'items_list'            => esc_html__( ' Use Cases list', 'consensus-custom' ),
+		);
+
+		$args = array(
+			'labels'             => $labels,
+			'description'        => esc_html__( 'Use Cases', 'consensus-custom' ),
+			'public'             => true,
+			'publicly_queryable' => true,
+			'show_ui'            => true,
+			'menu_icon'          => 'dashicons-networking',
+			'show_in_menu'       => true,
+			'query_var'          => true,
+			'rewrite'            => array(
+				'slug' => 'use-case',
+			),
+			'capability_type'    => 'post',
+			'has_archive'        => true,
+			'hierarchical'       => false,
+			'menu_position'      => null,
+			'supports'           => $supports,
+			'show_in_rest'       => true,
+			'taxonomy'           => array(
+				'type',
+			),
+		);
+
+		register_post_type( 'use-case', $args );
+	}
+
+	/**
+	 * Register custom taxonomies.
+	 *
+	 * @action init
+	 */
+	public function register_taxonomies() {
+		// Use Case Type labels.
+		$type_labels = array(
+			'name'              => _x( 'Types', 'taxonomy general name', 'consensus-custom' ),
+			'singular_name'     => _x( 'Type', 'taxonomy singular name', 'consensus-custom' ),
+			'search_items'      => esc_html__( 'Search Types', 'consensus-custom' ),
+			'all_items'         => esc_html__( 'All Types', 'consensus-custom' ),
+			'parent_item'       => esc_html__( 'Parent Type', 'consensus-custom' ),
+			'parent_item_colon' => esc_html__( 'Parent Type:', 'consensus-custom' ),
+			'edit_item'         => esc_html__( 'Edit Type', 'consensus-custom' ),
+			'update_item'       => esc_html__( 'Update Type', 'consensus-custom' ),
+			'add_new_item'      => esc_html__( 'Add New Type', 'consensus-custom' ),
+			'new_item_name'     => esc_html__( 'New Type', 'consensus-custom' ),
+			'menu_name'         => esc_html__( 'Types', 'consensus-custom' ),
+			'not_found'         => esc_html__( 'No type found.', 'consensus-custom' ),
+		);
+
+		$taxonomies = array(
+			'use-case' => array(
+				'slug'         => 'type',
+				'labels'       => $type_labels,
+				'hierarchical' => true,
+			),
+		);
+
+		// Register all custom taxonomies
+		foreach ( $taxonomies as $type => $info ) {
+			$args = array(
+				'hierarchical'       => $info['hierarchical'],
+				'labels'             => $info['labels'],
+				'show_ui'            => true,
+				'show_admin_column'  => true,
+				'query_var'          => true,
+				'rewrite'            => array(
+					'slug' => $info['slug'],
+				),
+				'show_in_nav_menus'  => true,
+				'show_tagcloud'      => false,
+				'show_in_quick_edit' => true,
+			);
+
+			register_taxonomy( $info['slug'], $type, $args );
+		}
 	}
 }
