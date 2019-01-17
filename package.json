@@ -1,0 +1,30 @@
+{
+  "name": "consensus-custom",
+  "version": "1.0.0",
+  "description": "Dependencies for consensus custom theme",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "gulp": "^3.9.1",
+    "gulp-rename": "^1.4.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-uglify": "^3.0.1",
+    "pump": "^3.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "gulp"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/storebloom/consensus_custom.git"
+  },
+  "keywords": [
+    "sharethis.com"
+  ],
+  "author": "Scott Adrian",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/storebloom/consensus_custom/issues"
+  },
+  "homepage": "https://github.com/storebloom/consensus_custom#readme"
+}

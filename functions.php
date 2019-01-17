@@ -94,6 +94,21 @@ function consensus_custom_content_width() {
 add_action( 'after_setup_theme', 'consensus_custom_content_width', 0 );
 
 /**
+ * Helper function to retreive page sections data.
+ *
+ * @param string  $page The page name to get info for.
+ * @param string  $section The Section of the page to get info for.
+ * @param integer $postid The post id to get info from.
+ *
+ * @return array
+ */
+function get_section_info( $page, $section, $postid ) {
+	$the_meta = get_post_meta( $postid, 'page-meta', true );
+
+	return ! empty( $the_meta[ $page . '-' . $section ] ) ? $the_meta[ $page . '-' . $section ] : '';
+}
+
+/**
  * Bootstrap the theme.
  */
 require get_template_directory() . '/inc/class-theme-base.php';

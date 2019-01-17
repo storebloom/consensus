@@ -34,6 +34,7 @@ class Theme extends Theme_Base {
 
 		// Initiate classes.
 		$classes = array(
+			new Custom_Fields( $this ),
 			new Register( $this ),
 		);
 
@@ -53,18 +54,28 @@ class Theme extends Theme_Base {
 	 * @action wp_enqueue_scripts
 	 */
 	public function register_assets() {
+		// Version CSS file in a theme
 		wp_enqueue_style( 'font', 'https://fonts.googleapis.com/css?family=Montserrat:500,600,700', array(), '1' );
-		wp_enqueue_style( 'consensus-custom-style', get_stylesheet_uri(), null, time() );
-		wp_register_script(
-			"{$this->assets_prefix}-front-ui",
-			"{$this->dir_url}/js/consensus-front-ui.js",
-			array(
-				'jquery',
-				'wp-util',
-			),
-			'1.0.0',
-			true
-		);
+		wp_enqueue_style( 'theme-styles', "{$this->dir_url}/assets/dist/css/app.css", array(), time() );
+		wp_register_script( "{$this->assets_prefix}-front-ui", "{$this->dir_url}/assets/dist/js/consensus-front-ui.min.js", array(
+			'jquery',
+			'wp-util',
+		), time(), true );
+
+		wp_register_script( 'custom-navigation', "{$this->dir_url}/assets/dist/js/navigation.min.js", array(), '20151215', true );
+		wp_register_script( 'custom-skip-link-focus-fix', "{$this->dir_url}/assets/dist/js/skip-link-focus-fix.min.js", array(), '20151215', true );
+	}
+
+	/**
+	 * Register admin scripts/styles.
+	 *
+	 * @action admin_enqueue_scripts
+	 */
+	public function register_admin_assets() {
+		wp_register_script( "{$this->assets_prefix}-custom-fields", "{$this->dir_url}/assets/dist/js/consensus-custom-fields.min.js", array(
+			'jquery',
+			'wp-util',
+		), time(), true );
 	}
 
 	/**
@@ -73,7 +84,7 @@ class Theme extends Theme_Base {
 	 * @action customize_preview_init
 	 */
 	public function consensus_custom_customize_preview_js() {
-		wp_enqueue_script( 'consensus-custom-customizer', get_template_directory_uri() . '/js/customizer.js', array( 'customize-preview' ), '20151215', true );
+		wp_enqueue_script( 'consensus-custom-customizer', "{$this->dir_url}/assets/dist/customizer.min.js", array( 'customize-preview' ), '20151215', true );
 	}
 
 	/**
