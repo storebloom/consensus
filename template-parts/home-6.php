@@ -39,6 +39,8 @@
 	</div>
 
 	<div class="right-section">
-		Global reach graphic goes here.
+		<?php if ( isset( $section_info['graphic'] ) && '' !== $section_info['graphic'] ) : ?>
+			<img src="<?php echo esc_attr( $section_info['graphic'] ); ?>">
+		<?php endif; ?>
 	</div>
 </div>

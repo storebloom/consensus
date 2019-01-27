@@ -38,7 +38,10 @@ var ConsensusCustomFields = ( function( $, wp ) {
 		 */
 		listen: function() {
 			var self = this,
-				timer = '';
+				timer = '',
+				file_frame,
+				wp_media_post_id = wp.media.model.settings.post.id, // Store the old id
+				set_to_post_id = this.data.postid; // Set this
 
 			this.$container.on( 'click', '.add-overlay-field', function() {
 				var section = $( this ).closest( '.postbox' ).attr( 'id' ).replace( '-consensus', '' ),
@@ -122,9 +125,9 @@ var ConsensusCustomFields = ( function( $, wp ) {
 				$( this ).parent( '.consensus-usecase-repeater-field' ).remove();
 			} );
 
-			// Remove usecase field from admin.
-			this.$container.on( 'click', '.remove-usecase-field', function() {
-				$( this ).parent( '.consensus-tab-content-overlay' ).remove();
+			// Remove image-repeater from admin.
+			this.$container.on( 'click', '.consensus-remove-image', function() {
+				$( this ).parent( '.consensus-image' ).remove();
 			} );
 
 			// Remove image text field from admin.
@@ -133,20 +136,40 @@ var ConsensusCustomFields = ( function( $, wp ) {
 			} );
 
 			// Custom image field.
-			this.$container.on( 'click', '.add-consensus-image', function() {
-				var self = this;
+			this.$container.on( 'click', '.add-consensus-image', function(e) {
+				event.preventDefault();
 
-				window.send_to_editor = function( html ) {
-					var imgurl = $( html ).attr('src');
+				var attachment,
+					self2 = this;
 
-					$( self ).siblings( 'input' ).val( imgurl );
-					tb_remove();
-				};
+				// Set the wp.media post id so the uploader grabs the ID we want when initialised
+				wp.media.model.settings.post.id = set_to_post_id;
 
-				tb_show('', 'media-upload.php?type=image&amp;TB_iframe=true' );
-
-				return false;
-			} );
+				// Create the media frame.
+				file_frame = wp.media.frames.file_frame = wp.media({
+					title: 'Select a image to upload',
+					button: {
+						text: 'Use this image',
+					},
+					multiple: false	// Set to true to allow multiple files to be selected
+				});
+				// When an image is selected, run a callback.
+				file_frame.on( 'select', function() {
+					// We set multiple to false so only get one image from the uploader
+					attachment = file_frame.state().get('selection').first().toJSON();
+					// Do something with attachment.id and/or attachment.url here
+					//$( '#image-preview' ).attr( 'src', attachment.url ).css( 'width', 'auto' );
+					$( self2 ).siblings( 'input' ).val( attachment.url );
+					// Restore the main post ID
+					wp.media.model.settings.post.id = wp_media_post_id;
+				});
+				// Finally, open the modal
+				file_frame.open();
+			});
+			// Restore the main ID when the add media button is pressed
+			$( 'a.add_media' ).on( 'click', function() {
+				wp.media.model.settings.post.id = wp_media_post_id;
+			});
 		},
 
 		/**

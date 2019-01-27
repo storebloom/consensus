@@ -9,8 +9,6 @@
  * @package ConsensusCustom
  */
 
-$center_logo  = 'on' === get_post_meta( get_the_ID(), 'center-logo', true );
-$header_class = $center_logo ? ' center-logo' : '';
 ?>
 <!doctype html>
 <html <?php language_attributes(); ?>>
@@ -24,14 +22,12 @@ $header_class = $center_logo ? ' center-logo' : '';
 
 <body <?php body_class(); ?>>
 <div id="page" class="site">
-	<a class="skip-link screen-reader-text" href="#content"><?php esc_html_e( 'Skip to content', 'consensus-custom' ); ?></a>
-
-	<header id="masthead" class="site-header<?php echo esc_attr( $header_class ); ?>">
+	<header id="masthead" class="site-header">
 		<div class="site-branding">
 			<?php the_custom_logo(); ?>
 		</div><!-- .site-branding -->
 
-		<?php if ( ! $center_logo ) : ?>
+
 		<nav id="site-navigation" class="main-navigation">
 			<button class="menu-toggle" aria-controls="primary-menu" aria-expanded="false"><?php esc_html_e( 'Primary Menu', 'consensus-custom' ); ?></button>
 			<?php
@@ -41,7 +37,6 @@ $header_class = $center_logo ? ' center-logo' : '';
 			) );
 			?>
 		</nav><!-- #site-navigation -->
-		<?php endif; ?>
 	</header><!-- #masthead -->
 
 	<div id="content" class="site-content">

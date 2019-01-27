@@ -16,7 +16,12 @@ get_header();
 		while ( have_posts() ) :
 			the_post();
 
-			get_template_part( 'template-parts/content', get_post_type() );
+			$postid = get_the_ID();
+			$the_meta = get_post_meta( $postid, 'page-meta', true );
+			$section_info = ! empty( $the_meta[ 'article-consensus' ] ) ? $the_meta[ 'article-consensus' ] : '';
+			$article_vol = get_article_volume( get_the_date(), $postid );
+
+			include locate_template( 'template-parts/content.php' );
 		endwhile; // End of the loop.
 		?>
 		</main><!-- #main -->

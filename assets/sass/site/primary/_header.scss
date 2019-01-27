@@ -1,0 +1,25 @@
+body {
+  header {
+    background: #ffffff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999999;
+
+    .site-branding {
+      display: inline-block;
+      padding: 25px 60px;
+
+      img {
+        width: 182px;
+      }
+    }
+  }
+
+  &.admin-bar {
+    header {
+      top: 32px;
+    }
+  }
+}

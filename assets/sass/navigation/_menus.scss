@@ -1,14 +1,15 @@
 .main-navigation {
-	clear: both;
-	display: block;
-	float: left;
-	width: 100%;
+	float: right;
+	display: inline-block;
+	padding: 35px 60px 25px;
+	width: 65%;
 
 	ul {
 		display: none;
 		list-style: none;
 		margin: 0;
 		padding-left: 0;
+		text-align: right;
 
 		ul {
 			box-shadow: 0 3px 3px rgba(0, 0, 0, 0.2);
@@ -50,17 +51,69 @@
 	}
 
 	li {
-		float: left;
+		display: inline-block;
 		position: relative;
+		margin-left: 10%;
 
-		&:hover > a,
-		&.focus > a {
+		&:first-child {
+			&:hover > a,
+			&.focus > a {
+				&:after {
+					content: '';
+					background: #FF1B1B;
+					opacity: .7;
+					width: 100%;
+					position: absolute;
+					height: 10px;
+					left: 0;
+					bottom: 2px;
+					z-index: -1;
+				}
+			}
+		}
+
+		&:nth-child(2) {
+			&:hover > a,
+			&.focus > a {
+				&:after {
+					content: '';
+					background: #262A9E;
+					opacity: .7;
+					width: 100%;
+					position: absolute;
+					height: 10px;
+					left: 0;
+					bottom: 2px;
+					z-index: -1;
+				}
+			}
+		}
+
+		&:nth-child(3) {
+			&:hover > a,
+			&.focus > a {
+				&:after {
+					content: '';
+					background: #FFBF32;
+					opacity: .7;
+					width: 100%;
+					position: absolute;
+					height: 10px;
+					left: 0;
+					bottom: 2px;
+					z-index: -1;
+				}
+			}
 		}
 	}
 
 	a {
 		display: block;
 		text-decoration: none;
+		color: #000000;
+		font-family: Avenir;
+		text-transform: uppercase;
+		font-size: 17px;
 	}
 
 	.current_page_item > a,

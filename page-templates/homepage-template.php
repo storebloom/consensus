@@ -11,7 +11,11 @@ while ( have_posts() ) :
 	the_post();
 
 	$the_meta = get_post_meta( get_the_ID(), 'page-meta', true );
-
+	$types = get_terms( ['taxonomy' => 'type'] );
+	$leaderships = get_posts(array(
+		'post_type' => 'leadership',
+		'numberposts' => -1,
+	));
 	// Set for 7 sections.  Change integer to add or remove sections.
 	for ( $i = 1; $i <= 7; $i++ ) {
 

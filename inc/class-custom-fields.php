@@ -36,39 +36,15 @@ class Custom_Fields {
 	 * @action admin_enqueue_scripts
 	 */
 	public function enqueue_admin_assets() {
+		global $post;
+
+		$postid = isset($post->ID) ? $post->ID : '';
+
 		wp_enqueue_script( "{$this->theme->assets_prefix}-custom-fields" );
 		wp_add_inline_script( "{$this->theme->assets_prefix}-custom-fields", sprintf( 'ConsensusCustomFields.boot( %s );',
 			wp_json_encode( array(
 				'nonce' => wp_create_nonce( $this->theme->meta_prefix ),
-			) )
-		) );
-	}
-
-	/**
-	 * Enqueue front Assets for custom fields.
-	 *
-	 * @action wp_enqueue_scripts
-	 */
-	public function enqueue_front_assets() {
-		global $post;
-
-		if ( is_page( 'Homepage' ) || is_page( 'Company' ) ) {
-			wp_enqueue_script( "{$this->theme->assets_prefix}-animation-manifest" );
-			wp_enqueue_script( "{$this->theme->assets_prefix}-animation-vendor" );
-			wp_enqueue_script( "{$this->theme->assets_prefix}-animation-app" );
-		}
-
-		$postid     = isset( $post->ID ) ? $post->ID : '';
-		$post_title = isset( $post->post_title ) ? $post->post_title : '';
-
-		wp_enqueue_script( "{$this->theme->assets_prefix}-scrollify" );
-		wp_enqueue_script( "{$this->theme->assets_prefix}-front-ui" );
-		wp_add_inline_script( "{$this->theme->assets_prefix}-front-ui", sprintf( 'ConsensusFrontUI.boot( %s );',
-			wp_json_encode( array(
-				'nonce'  => wp_create_nonce( $this->theme->meta_prefix ),
-				'mobile' => wp_is_mobile(),
 				'postid' => $postid,
-				'page'   => $post_title,
 			) )
 		) );
 	}
@@ -145,6 +121,12 @@ class Custom_Fields {
 						foreach ( $field_value as $num => $wysiwyg_values ) {
 							$value[ $section ][ $field_name ][ $num ]['content'] = wp_kses_post( wp_unslash( $wysiwyg_values['content'] ) );
 						}
+					} elseif ( 'images' === $field_name ) {
+						foreach ( $field_value as $num => $image_value ) {
+							if ( '' !== $image_value ) {
+								$value[ $section ][ $field_name ][$num] = sanitize_text_field( wp_unslash( $image_value ) );
+							}
+						}
 					} else {
 						$value[ $section ][ $field_name ] = wp_kses_post( wp_unslash( $field_value ) );
 					}
@@ -200,6 +182,20 @@ class Custom_Fields {
 				$prefix = 'home-section-';
 
 				// Home section 1.
+				$phrase_field  = $this->create_custom_field( $postid, $prefix . '1', 'first-phrase', 'text' );
+				$phrase_field2 = $this->create_custom_field( $postid, $prefix . '1', 'second-phrase', 'wysiwyg' );
+				$phrase_field3 = $this->create_custom_field( $postid, $prefix . '1', 'third-phrase', 'wysiwyg' );
+				$anima_field   = $this->create_custom_field( $postid, $prefix . '1', 'image', 'image' );
+				$anima_field2  = $this->create_custom_field( $postid, $prefix . '1', 'image-2', 'image' );
+				$anima_field3  = $this->create_custom_field( $postid, $prefix . '1', 'image-3', 'image' );
+				$anima_field4  = $this->create_custom_field( $postid, $prefix . '1', 'image-4', 'image' );
+				$anima_field5  = $this->create_custom_field( $postid, $prefix . '1', 'image-5', 'image' );
+				$anima_field6  = $this->create_custom_field( $postid, $prefix . '1', 'image-6', 'image' );
+				$anima_field7  = $this->create_custom_field( $postid, $prefix . '1', 'image-7', 'image' );
+				$anima_field8  = $this->create_custom_field( $postid, $prefix . '1', 'image-8', 'image' );
+				$anima_field9  = $this->create_custom_field( $postid, $prefix . '1', 'image-9', 'image' );
+				$anima_field10 = $this->create_custom_field( $postid, $prefix . '1', 'image-10', 'image' );
+				$anima_field11 = $this->create_custom_field( $postid, $prefix . '1', 'image-11', 'image' );
 
 				// Home section 2.
 				$title_field    = $this->create_custom_field( $postid, $prefix . '2', 'title', 'text' );
@@ -226,6 +222,7 @@ class Custom_Fields {
 				$content_field3  = $this->create_custom_field( $postid, $prefix . '6', 'content', 'wysiwyg' );
 				$button_text     = $this->create_custom_field( $postid, $prefix . '6', 'button-text', 'text' );
 				$button_url      = $this->create_custom_field( $postid, $prefix . '6', 'button-url', 'text' );
+				$graphic         = $this->create_custom_field( $postid, $prefix . '6', 'graphic', 'image' );
 
 				// Home section 7.
 				$image_field3   = $this->create_custom_field( $postid, $prefix . '7', 'image', 'image' );
@@ -241,7 +238,7 @@ class Custom_Fields {
 						'screen'      => 'page',
 						'context'     => 'normal',
 						'priority'    => 'high',
-						'args'        => '',
+						'args'        => $phrase_field . $phrase_field2 . $phrase_field3 . $anima_field . $anima_field2 . $anima_field3 . $anima_field4 . $anima_field5 . $anima_field6 . $anima_field7 . $anima_field8 . $anima_field9 . $anima_field10 . $anima_field11,
 					),
 					array(
 						'id'          => $prefix . '2-consensus',
@@ -281,7 +278,7 @@ class Custom_Fields {
 						'screen'      => 'page',
 						'context'     => 'normal',
 						'priority'    => 'high',
-						'args'        => $title_field5 . $subtitle_field4 . $content_field3 . $button_text . $button_url,
+						'args'        => $title_field5 . $subtitle_field4 . $content_field3 . $button_text . $button_url . $graphic,
 					),
 					array(
 						'id'          => $prefix . '7-consensus',
@@ -293,21 +290,70 @@ class Custom_Fields {
 					),
 				);
 				break;
+			case 'page-templates/blog-template.php':
+
+				$prefix = 'blog-section-consensus';
+
+				$title_field    = $this->create_custom_field( $postid, $prefix, 'title', 'text' );
+				$subtitle_field = $this->create_custom_field( $postid, $prefix, 'subtitle', 'text' );
+				$form_field     = $this->create_custom_field( $postid, $prefix, 'form', 'text' );
+
+				$metabox_array = array(
+					array(
+						'id'          => $prefix,
+						'description' => 'Blog Fields',
+						'screen'      => 'page',
+						'context'     => 'normal',
+						'priority'    => 'high',
+						'args'        => $title_field . $subtitle_field . $form_field,
+					),
+				);
+				break;
 		} // End switch().
 
 		// Post Type switch case.
 		switch ( $post_type ) {
-			case 'clients':
-				$url_field = $this->create_custom_field( $postid, 'client-section-consensus', 'apply-link', 'text' );
-
-				$metabox_array = array(
+			case 'use-case':
+				$subtitle_field  = $this->create_custom_field( $postid, 'use-case-section-consensus', 'subtitle', 'text' );
+				$client_field    = $this->create_custom_field( $postid, 'use-case-section-consensus', 'client', 'wysiwyg' );
+				$situation_field = $this->create_custom_field( $postid, 'use-case-section-consensus', 'situation', 'wysiwyg' );
+				$solution_field  = $this->create_custom_field( $postid, 'use-case-section-consensus', 'solution', 'wysiwyg' );
+				$image_gallery   = $this->create_custom_field( $postid, 'use-case-section-consensus', 'images', 'image_repeater' );
+				$logos           = $this->create_custom_field( $postid, 'use-case-section-consensus', 'logos', 'wysiwyg' );
+				$metabox_array   = array(
 					array(
-						'id'          => 'client-section-consensus',
-						'description' => 'Add Url To iSolved Job Page',
-						'screen'      => 'client',
+						'id'          => 'use-case-section-consensus',
+						'description' => 'Extra Fields For Use Cases',
+						'screen'      => 'use-case',
 						'context'     => 'normal',
 						'priority'    => 'high',
-						'args'        => $url_field,
+						'args'        => $subtitle_field . $client_field . $situation_field . $solution_field . $logos . $image_gallery,
+					),
+				);
+				break;
+			case 'leadership':
+				$work_field    = $this->create_custom_field( $postid, 'leaership-section-consensus', 'workdate', 'text' );
+				$metabox_array = array(
+					array(
+						'id'          => 'leadership-section-consensus',
+						'description' => 'Work Date',
+						'screen'      => 'leadership',
+						'context'     => 'normal',
+						'priority'    => 'high',
+						'args'        => $work_field,
+					),
+				);
+				break;
+			case 'post':
+				$subtitle_field = $this->create_custom_field( $postid, 'article-consensus', 'subtitle', 'wysiwyg' );
+				$metabox_array  = array(
+					array(
+						'id'          => 'article-consensus',
+						'description' => 'Article Fields',
+						'screen'      => 'post',
+						'context'     => 'normal',
+						'priority'    => 'high',
+						'args'        => $subtitle_field,
 					),
 				);
 				break;
@@ -761,29 +807,38 @@ class Custom_Fields {
 	 * @param string $name The field name.
 	 * @param string $value The custom field value if any.
 	 */
-	private function get_image_repeater_field_html( $section, $name, $value = array() ) {
-		$html  = '<div class="consensus-image-repeater-field">';
-		$html .= '<label class="consensus-admin-label">' . ucfirst( str_replace( '-', ' ', $name ) ) . '</label>';
-		$html .= '<p>';
-		$html .= '<button type="button" class="upload-consensus-image">';
-		$html .= esc_html__( 'add image', 'consensus-custom' );
-		$html .= '</button>';
-		$html .= '</p>';
-		$html .= '<div class="consensus-image-list-wrap">';
+	private function get_image_repeater_field_html( $section, $name, $value ) {
+		$count = is_array( $value ) ? intval( count( $value ) ) + 1 : 1;
+		$html  = '<div class="consensus-image-field">';
+		if ( ! is_array( $value ) ) {
+			$html .= '<div class="field-label-wrap">';
+			$html .= '<label class="consensus-admin-label">' . ucfirst( str_replace( '-', ' ', $name ) ) . '</label>';
+			$html .= '<input type="text" name="page-meta[' . $section . '][' . $name . '][1]" value="" size="60">';
+			$html .= '<button class="add-consensus-image">' . esc_html__( 'Add Image', 'consensus-custom' ) . '</button>';
+			$html .= '</div>';
+		} else {
+			$html .= '<div class="field-label-wrap">';
+			$html .= '<label class="consensus-admin-label">' . ucfirst( str_replace( '-', ' ', $name ) ) . '</label>';
+			$html .= '<input type="text" name="page-meta[' . $section . '][' . $name . '][' . $count .']" value="" size="60">';
+			$html .= '<button class="add-consensus-image">' . esc_html__( 'Add Image', 'consensus-custom' ) . '</button>';
+			$html .= '</div>';
+			$html .= '<div class="consensus-image-list-wrap" style="display: flex; flex-direction: row;">';
 
-		if ( is_array( $value ) ) {
 			foreach ( $value as $num => $image_url ) {
 				$html .= '<div class="consensus-image">';
-				$html .= '<span class="consensus-remove-image">';
+				$html .= '<span class="consensus-remove-image" style="font-size: 18px; margin-right: 4px; cursor: pointer;">';
 				$html .= 'x';
 				$html .= '</span>';
-				$html .= '<img src="' . $image_url . '">';
+				$html .= '<img width="120px" style="padding-right: 20px;" src="' . $image_url . '">';
 				$html .= '<input type="hidden" name="page-meta[' . $section . '][' . $name . '][' . $num . ']" id="consensus-' . $name . '-' . $num . '" value="' . $image_url . '">';
 				$html .= '</div>';
+
+				++$count;
 			}
+
+			$html .= '</div>';
 		}
 
-		$html .= '</div>';
 		$html .= '</div>';
 
 		return $html;

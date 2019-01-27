@@ -1,23 +1,31 @@
-.sticky {
-	display: block;
-}
+body {
+	padding-top: 100px;
 
-.post,
-.page {
-	margin: 0 0 1.5em;
-}
+	.sticky {
+		display: block;
+	}
 
-.updated:not(.published) {
-	display: none;
-}
+	.post,
+	.page {
+		margin: 0 0 1.5em;
+	}
 
-.page-content,
-.entry-content,
-.entry-summary {
-	margin: 1.5em 0 0;
-}
+	.updated:not(.published) {
+		display: none;
+	}
 
-.page-links {
-	clear: both;
-	margin: 0 0 1.5em;
+	.page-content,
+	.entry-content,
+	.entry-summary {
+		margin: 1.5em 0 0;
+	}
+
+	.page-links {
+		clear: both;
+		margin: 0 0 1.5em;
+	}
+
+	&.admin-bar {
+		padding-top: 132px;
+	}
 }

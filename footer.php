@@ -16,10 +16,13 @@ $footer_class = 'on' === get_post_meta( get_the_ID(), 'hide-footer', true ) ? ' 
 
 	<footer id="colophon" class="site-footer<?php echo esc_attr( $footer_class ); ?>">
 		<div class="footer-inner-wrap">
-			<div class="first-footer-area"><?php dynamic_sidebar( 'footer-1' ); ?></div>
-			<div class="second-footer-area"><?php dynamic_sidebar( 'footer-2' ); ?></div>
-			<div class="third-footer-area"><?php dynamic_sidebar( 'footer-3' ); ?></div>
-			<div class="fourth-footer-area"><?php dynamic_sidebar( 'footer-4' ); ?></div>
+			<div class="footer-area"><?php dynamic_sidebar( 'footer-1' ); ?></div>
+			<div class="footer-area"><?php dynamic_sidebar( 'footer-2' ); ?></div>
+			<div class="footer-area"><?php dynamic_sidebar( 'footer-3' ); ?></div>
+			<div class="footer-area"><?php dynamic_sidebar( 'footer-4' ); ?></div>
+		</div>
+		<div class="sub-footer-wrap">
+			<div class="bottom-footer-area"><?php dynamic_sidebar( 'footer-5' ); ?></div>
 		</div>
 	</footer><!-- #colophon -->
 </div><!-- #page -->

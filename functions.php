@@ -109,6 +109,42 @@ function get_section_info( $page, $section, $postid ) {
 }
 
 /**
+ * Helper function to determine the volume and number of an article based on date and count.
+ *
+ * @param string  $postdate The article post date.
+ * @param integer $postid The article postid.
+ *
+ * @return string
+ */
+function get_article_volume( $postdate, $postid ) {
+	$year = explode( ',', $postdate )[1];
+	$vol  =  intval( $year ) - 2008;
+	$args = array(
+		'post_type' => 'post',
+		'date_query' => array(
+			array('year' => $year)
+	    ),
+		'orderby' => 'date',
+		'order' => 'ASC'
+	);
+
+	$posts = new WP_Query($args);
+	$posts = $posts->get_posts();
+
+	foreach ( $posts as $num => $post ) {
+		if ( $postid === $post->ID ) {
+			$vol_num = $num + 1;
+		}
+	}
+
+	$html  = 'VOL ' . (string) $vol;
+	$html .= ', ';
+	$html .= 'NO. ' . (string) $vol_num;
+
+	return $html;
+}
+
+/**
  * Bootstrap the theme.
  */
 require get_template_directory() . '/inc/class-theme-base.php';

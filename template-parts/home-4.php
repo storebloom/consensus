@@ -17,15 +17,16 @@
 		<?php endif; ?>
 
 		<div class="section-line-space"></div>
-
-		<?php if ( isset( $section_info['subtitle'] ) && '' !== $section_info['subtitle'] ) : ?>
-			<div class="section-subtitle">
-				<?php echo esc_html( $section_info['subtitle'] ); ?>
+	</div>
+	<div class="leadership-section-wrap">
+		<?php foreach( $leaderships as $leadership ) :
+			$thumbnail = get_the_post_thumbnail_url( $leadership->ID );
+			$main_image = false !== $thumbnail ? 'background: url(' . $thumbnail . ')' : '';
+			?>
+			<div data-leader="<?php echo esc_attr( $leadership->ID ); ?>" class="leadership-item" style="<?php echo esc_attr( $main_image ); ?>">
+				<?php echo esc_html( $leadership->post_title ); ?>
 			</div>
-		<?php endif; ?>
+		<?php endforeach; ?>
 	</div>
-
-	<div class="employee-section-wrap">
-		Employee Section here
-	</div>
+	<div class="leadership-popover"></div>
 </div>

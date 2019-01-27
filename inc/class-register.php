@@ -68,7 +68,7 @@ class Register {
 	 * @action widgets_init
 	 */
 	public function footer_widgets_init() {
-		for ( $x = 1; $x <= 4; $x ++ ) {
+		for ( $x = 1; $x <= 5; $x ++ ) {
 			register_sidebar(
 				array(
 					'name'          => 'Footer ' . $x,
@@ -249,5 +249,136 @@ class Register {
 
 			register_taxonomy( $info['slug'], $type, $args );
 		}
+	}
+
+	/**
+	 * AJAX Callback function to retrieve leadership html.
+	 *
+	 * @action wp_ajax_get_leader
+	 * @action wp_ajax_no_priv_get_leader
+	 */
+	public function get_leader() {
+		check_ajax_referer( $this->theme->meta_prefix, 'nonce' );
+
+		if ( ! isset( $_POST['id'] ) || '' === $_POST['id'] ) { // WPCS: input var ok.
+			wp_send_json_error( 'Get overlay field failed' );
+		}
+
+		$leader = get_post( intval( $_POST['id'] ) ); // WPCS: input var ok.
+		$workdate = get_post_meta( $leader, 'workdate', true );
+
+		$thumbnail = get_the_post_thumbnail_url( $leadership->ID );
+		$main_image = false !== $thumbnail ? '<img src="' . $thumbnail . '">' : '';
+
+		$html  = '<div class="leader-top">';
+		$html .= '<div class="leader-name">';
+		$html .= $leader->post_title;
+		$html .= '</div>';
+		$html .= '<div class="leader-close">';
+		$html .= esc_html__( 'X Close', 'consensus-custom' );
+		$html .= '</div>';
+		$html .= '</div>';
+		$html .= '<div class="leader-thumb">';
+		$html .= $main_image;
+		$html .= '</div>';
+		$Html .= '<div class="leader-content">';
+		$html .= '<div class="leader-left">';
+		$html .= $workdate;
+		$html .= '</div>';
+		$html .= '<div class="leader-right">';
+		$html .= '<h2>' . $leader->post_title . '</h2>';
+		$html .= $leader->post_content;
+		$html .= '</div>';
+		$html .= '</div>';
+
+		wp_send_json_success( $html );
+	}
+
+	/**
+	 * AJAX Callback function to retrieve brand html.
+	 *
+	 * @action wp_ajax_get_brand_photos
+	 * @action wp_ajax_no_priv_get_brand_photos
+	 */
+	public function get_brand() {
+		check_ajax_referer( $this->theme->meta_prefix, 'nonce' );
+
+		if ( ! isset( $_POST['id'] ) || '' === $_POST['id'] ) { // WPCS: input var ok.
+			wp_send_json_error( 'Get brand photos failed' );
+		}
+
+		$brand = $this->get_brand_photos( intval( $_POST['id'] ) ); // WPCS: input var ok.
+
+		wp_send_json_success( $html );
+	}
+
+	/**
+	 * Helper function to get brand photos.
+	 *
+	 * @param integer $brandid The brand id.
+	 */
+	public function get_brand_photos( $brandid ) {
+		$photos = get_section_info( 'use-case-section', 'consensus', $brandid );
+		$html = '';
+
+		if ( isset( $photos['images'] ) && is_array( $photos['images']) ) {
+			foreach ( $photos['images'] as $photo ) {
+				$html .= '<img src="' . esc_url( $photo ) . '">';
+			}
+		}
+
+		return $html;
+	}
+
+	/**
+	 * AJAX Callback function to retrieve brands html.
+	 *
+	 * @action wp_ajax_get_brands
+	 * @action wp_ajax_no_priv_get_brands
+	 */
+	public function get_brands() {
+		check_ajax_referer( $this->theme->meta_prefix, 'nonce' );
+
+		if ( ! isset( $_POST['id'] ) || '' === $_POST['id'] ) { // WPCS: input var ok.
+			wp_send_json_error( 'Get brands failed' );
+		}
+
+		$html = '';
+		$term = intval( $_POST['id'] ); // WPCS: input var ok.
+		$brands = get_posts(array(
+			'post_type' => 'use-case',
+			'numberposts' => 4,
+			'tax_query' => array(
+				array(
+					'taxonomy' => 'type',
+					'terms' => $term,
+					'field' => 'id',
+					'include_children' => false
+				)
+			)
+		));
+
+		$html .= '<div id="' . esc_attr( $term . '-type' ) . '" class="case-study-brands">';
+
+		foreach( $brands as $brand ) :
+			$html .= '<div data-brand="' . esc_attr( $brand->ID ) . '" class="case-study-brand">';
+			$html .= esc_html( $brand->post_title );
+			$html .= '</div>';
+		endforeach;
+
+		$photos = get_section_info( 'use-case-section', 'consensus', $brands[0]->ID )['images'];
+		$html .= '</div>';
+		$html .= '<div class="case-study-brand-photos">';
+
+		foreach( $brands as $brand ) {
+			$html .= '<div data-brand="' . esc_attr( $brand->ID ) . '" class="case-study-brand">';
+			$html .= $this->get_brand_photos( $brand->ID );
+			$html .= '</div>';
+		}
+
+		$html .= '</div>';
+		$html .= '</div>';
+
+		wp_send_json_success( $html );
 	}
 }
