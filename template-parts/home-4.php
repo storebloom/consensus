@@ -11,12 +11,10 @@
 <div id="home-section-4" class="home-section grey">
 	<div class="section-title-wrap">
 		<?php if ( isset( $section_info['title'] ) && '' !== $section_info['title'] ) : ?>
-			<div class="section-subtitle">
+			<div class="section-subtitle smaller">
 				<?php echo esc_html( $section_info['title'] ); ?>
 			</div>
 		<?php endif; ?>
-
-		<div class="section-line-space"></div>
 	</div>
 	<div class="leadership-section-wrap">
 		<?php foreach( $leaderships as $leadership ) :

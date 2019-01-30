@@ -117,7 +117,7 @@ function get_section_info( $page, $section, $postid ) {
  * @return string
  */
 function get_article_volume( $postdate, $postid ) {
-	$year = explode( ',', $postdate )[1];
+	$year = isset( explode( ',', $postdate )[1] ) ? explode( ',', $postdate )[1] : '';
 	$vol  =  intval( $year ) - 2008;
 	$args = array(
 		'post_type' => 'post',

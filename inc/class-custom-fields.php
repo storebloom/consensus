@@ -320,6 +320,7 @@ class Custom_Fields {
 				$solution_field  = $this->create_custom_field( $postid, 'use-case-section-consensus', 'solution', 'wysiwyg' );
 				$image_gallery   = $this->create_custom_field( $postid, 'use-case-section-consensus', 'images', 'image_repeater' );
 				$logos           = $this->create_custom_field( $postid, 'use-case-section-consensus', 'logos', 'wysiwyg' );
+				$black_logos     = $this->create_custom_field( $postid, 'use-case-section-consensus', 'black-logos', 'wysiwyg' );
 				$metabox_array   = array(
 					array(
 						'id'          => 'use-case-section-consensus',
@@ -327,7 +328,7 @@ class Custom_Fields {
 						'screen'      => 'use-case',
 						'context'     => 'normal',
 						'priority'    => 'high',
-						'args'        => $subtitle_field . $client_field . $situation_field . $solution_field . $logos . $image_gallery,
+						'args'        => $subtitle_field . $client_field . $situation_field . $solution_field . $logos . $black_logos . $image_gallery,
 					),
 				);
 				break;

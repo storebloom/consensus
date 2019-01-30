@@ -366,7 +366,8 @@ class Register {
 			$html .= '</div>';
 		endforeach;
 
-		$photos = get_section_info( 'use-case-section', 'consensus', $brands[0]->ID )['images'];
+		$first_brand = isset( $brands[0]->ID ) ? $brands[0]->ID : '';
+		$photos = '' !== $first_brand ? get_section_info( 'use-case-section', 'consensus', $first_brand )['images'] : '';
 		$html .= '</div>';
 		$html .= '<div class="case-study-brand-photos">';
 

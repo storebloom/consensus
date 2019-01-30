@@ -11,7 +11,6 @@
 <div id="home-section-6" class="home-section grey">
 	<div class="section-title-wrap left-section">
 		<div class="section-number"><?php echo esc_html__( '03', 'consensus-custom' ); ?></div>
-		<div class="section-line-space"></div>
 
 		<?php if ( isset( $section_info['title'] ) && '' !== $section_info['title'] ) : ?>
 			<div class="section-title">

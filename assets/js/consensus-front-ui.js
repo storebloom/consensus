@@ -33,9 +33,9 @@ var ConsensusFrontUI = ( function( $, wp ) {
 			this.$container = $( '.page' );
 			this.listen();
 
-			$('html,body').animate({ scrollTop: 0 }, 1);
+			//$('html,body').animate({ scrollTop: 0 }, 1);
 
-			setTimeout(function() { self.homeAnimate(); }, 1000);
+			//setTimeout(function() { self.homeAnimate(); }, 1000);
 		},
 
 		/**
@@ -43,6 +43,19 @@ var ConsensusFrontUI = ( function( $, wp ) {
 		 */
 		listen: function() {
 			var self = this;
+
+			// Select service type.
+			this.$container.on( 'click', '.service-type .service-name', function() {
+				var type = $( this ).attr( 'data-type' );
+
+				$( '.service-name' ).removeClass( 'selected' );
+				$( '.service-brands' ).removeClass( 'selected' );
+				$( '.service-desc' ).slideUp();
+
+
+				$( this ).addClass( 'selected' ).siblings( '.service-desc' ).slideDown();
+				$( '.service-brands[data-type="' + type + '"]' ).addClass( 'selected' );
+			} );
 
 			// Get leadership person info.
 			this.$container.on( 'click', '.leadership-item', function() {
