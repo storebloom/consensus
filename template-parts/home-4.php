@@ -22,7 +22,7 @@
 			$main_image = false !== $thumbnail ? 'background: url(' . $thumbnail . ')' : '';
 			?>
 			<div data-leader="<?php echo esc_attr( $leadership->ID ); ?>" class="leadership-item" style="<?php echo esc_attr( $main_image ); ?>">
-				<?php echo esc_html( $leadership->post_title ); ?>
+				<span><?php echo esc_html( $leadership->post_title ); ?></span>
 			</div>
 		<?php endforeach; ?>
 	</div>

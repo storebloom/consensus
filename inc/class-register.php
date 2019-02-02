@@ -265,12 +265,13 @@ class Register {
 		}
 
 		$leader = get_post( intval( $_POST['id'] ) ); // WPCS: input var ok.
-		$workdate = get_post_meta( $leader, 'workdate', true );
-
-		$thumbnail = get_the_post_thumbnail_url( $leadership->ID );
+		$section_info = get_section_info( 'leadership-section', 'consensus', $leader->ID );
+		$workdate = $section_info['workdate'];
+		$thumbnail = get_the_post_thumbnail_url( $leader );
 		$main_image = false !== $thumbnail ? '<img src="' . $thumbnail . '">' : '';
 
-		$html  = '<div class="leader-top">';
+		$html  = '<div class="leader-item-wrap">';
+		$html .= '<div class="leader-top">';
 		$html .= '<div class="leader-name">';
 		$html .= $leader->post_title;
 		$html .= '</div>';
@@ -288,6 +289,7 @@ class Register {
 		$html .= '<div class="leader-right">';
 		$html .= '<h2>' . $leader->post_title . '</h2>';
 		$html .= $leader->post_content;
+		$html .= '</div>';
 		$html .= '</div>';
 		$html .= '</div>';
 
@@ -309,7 +311,7 @@ class Register {
 
 		$brand = $this->get_brand_photos( intval( $_POST['id'] ) ); // WPCS: input var ok.
 
-		wp_send_json_success( $html );
+		wp_send_json_success( $brand );
 	}
 
 	/**
@@ -317,7 +319,7 @@ class Register {
 	 *
 	 * @param integer $brandid The brand id.
 	 */
-	public function get_brand_photos( $brandid ) {
+	public function get_brand_photos( $brandid, $type = '' ) {
 		$photos = get_section_info( 'use-case-section', 'consensus', $brandid );
 		$html = '';
 
@@ -325,6 +327,14 @@ class Register {
 			foreach ( $photos['images'] as $photo ) {
 				$html .= '<img src="' . esc_url( $photo ) . '">';
 			}
+		}
+
+		if ( 'subtitle' === $type ) {
+			$html = $photos['subtitle'];
+		}
+
+		if ( 'logos' === $type ) {
+			$html = $photos['logos'];
 		}
 
 		return $html;
@@ -345,9 +355,11 @@ class Register {
 
 		$html = '';
 		$term = intval( $_POST['id'] ); // WPCS: input var ok.
+		$all = isset( $_POST['all'] ) ? true : false;
+		$num_post = $all ? -1 : 4;
 		$brands = get_posts(array(
 			'post_type' => 'use-case',
-			'numberposts' => 4,
+			'numberposts' => $num_post,
 			'tax_query' => array(
 				array(
 					'taxonomy' => 'type',
@@ -358,27 +370,41 @@ class Register {
 			)
 		));
 
-		$html .= '<div id="' . esc_attr( $term . '-type' ) . '" class="case-study-brands">';
+		if ( $all ) {
+			foreach( $brands as $brand ) {
+				$link  = get_post_permalink( $brand->ID );
+				$subtitle =
+				$html .= '<a href="' . esc_url( $link ) . '" class="portfolio-brands-item">';
+				$html .= '<div class="portfolio-brand-logos">';
+				$html .= $this->get_brand_photos( $brand->ID, 'logos' );
+				$html .= '</div>';
+				$html .= '<div class="portfolio-use-case-title">';
+				$html .= esc_html__( 'Advisor to ', 'consensus-custom' ) . $brand->post_title;
+				$html .= '<span class="use-case-subtitle">';
+				$html .= $this->get_brand_photos( $brand->ID, 'subtitle' );
+				$html .= '</span>';
+				$html .= '<span class="read-more-port" >';
+				$html .= esc_html__( 'Read More +', 'consensus-custom' ) . '</span>';
+				$html .= '</div>';
+				$html .= '</a>';
+			}
+		} else {
+			$html .= '<div id="' . esc_attr( $term . '-type' ) . '" class="case-study-brands">';
 
-		foreach( $brands as $brand ) :
-			$html .= '<div data-brand="' . esc_attr( $brand->ID ) . '" class="case-study-brand">';
-			$html .= esc_html( $brand->post_title );
-			$html .= '</div>';
-		endforeach;
+			foreach ( $brands as $brand_num => $brand ) :
+				$first_brand = 0 === $brand_num ? ' selected' : '';
+				$html        .= '<div data-brand="' . esc_attr( $brand->ID ) . '" class="case-study-brand' . $first_brand . '">';
+				$html        .= esc_html( $brand->post_title );
+				$html        .= '</div>';
+			endforeach;
 
-		$first_brand = isset( $brands[0]->ID ) ? $brands[0]->ID : '';
-		$photos = '' !== $first_brand ? get_section_info( 'use-case-section', 'consensus', $first_brand )['images'] : '';
-		$html .= '</div>';
-		$html .= '<div class="case-study-brand-photos">';
-
-		foreach( $brands as $brand ) {
-			$html .= '<div data-brand="' . esc_attr( $brand->ID ) . '" class="case-study-brand">';
-			$html .= $this->get_brand_photos( $brand->ID );
-			$html .= '</div>';
+			$first_brand = isset( $brands[0]->ID ) ? $brands[0]->ID : '';
+			$html        .= '</div>';
+			$html        .= '<div class="case-study-brand-photos">';
+			$html        .= $this->get_brand_photos( $first_brand );
+			$html        .= '</div>';
+			$html        .= '</div>';
 		}
-
-		$html .= '</div>';
-		$html .= '</div>';
 
 		wp_send_json_success( $html );
 	}

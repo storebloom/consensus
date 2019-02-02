@@ -8,7 +8,7 @@
  */
 
 ?>
-<div class="portfolio-brands-item">
+<a href="<?php echo esc_url( $link ); ?>" class="portfolio-brands-item">
 	<div class="portfolio-brand-logos">
 		<?php echo wp_kses_post( $logos ); ?>
 	</div>
@@ -17,6 +17,6 @@
 		<span class="use-case-subtitle">
 							<?php echo esc_html( $subtitle ); ?>
 						</span>
-		<a href="<?php echo esc_url( $link ); ?>"><?php echo esc_html__( 'Read More +', 'consensus-custom' ); ?></a>
+		<span class="read-more-port" ><?php echo esc_html__( 'Read More +', 'consensus-custom' ); ?></span>
 	</div>
-</div>
+</a>

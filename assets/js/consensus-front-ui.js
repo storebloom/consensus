@@ -33,9 +33,13 @@ var ConsensusFrontUI = ( function( $, wp ) {
 			this.$container = $( '.page' );
 			this.listen();
 
-			//$('html,body').animate({ scrollTop: 0 }, 1);
+			if ( $('body').hasClass('home') ) {
+				$( 'html,body' ).animate( { scrollTop: 0 }, 1 );
 
-			//setTimeout(function() { self.homeAnimate(); }, 1000);
+				setTimeout( function () {
+					self.homeAnimate();
+				}, 1000 );
+			}
 		},
 
 		/**
@@ -66,7 +70,7 @@ var ConsensusFrontUI = ( function( $, wp ) {
 
 			// Close leadership popover.
 			this.$container.on( 'click', '.leader-close', function() {
-				$( '.leadership-popover' ).removeClass( 'open' ).html( '' );
+				$( '.leadership-popover' ).removeClass( 'open' );
 			} );
 
 			// Get brand photos for case studies section.
@@ -83,11 +87,22 @@ var ConsensusFrontUI = ( function( $, wp ) {
 				self.getBrands( termid );
 			} );
 
-			// Trigger home anmiate scroll.
-			this.$container.one( 'click', '.home-animation-scroll, .home-phrase-3', function() {
-				if ( ! $( '.section-logo svg' ).hasClass('disengage')) {
-					self.scrollAnimate();
-				}
+			if ( $('body').hasClass('home') ) {
+
+				// Trigger home anmiate scroll.
+				this.$container.one( 'click', '.home-animation-scroll, .home-phrase-3', function () {
+					if ( ! $( '.section-logo svg' ).hasClass( 'disengage' ) ) {
+						self.scrollAnimate();
+					}
+				} );
+			}
+
+			// Show all use-cases.
+			this.$container.on( 'click', '.portfolio-see-all', function() {
+				var id = $( this ).attr( 'data-type' ),
+					container = $( this ).siblings( '.portfolio-brands' );
+
+				self.getAllPort( id, container );
 			} );
 		},
 
@@ -115,6 +130,8 @@ var ConsensusFrontUI = ( function( $, wp ) {
 				id: brandid,
 				nonce: this.data.nonce
 			} ).always( function( results ) {
+				$( '.case-study-brand' ).removeClass( 'selected' );
+				$( '.case-study-brand[data-brand="' + brandid + '"]' ).addClass( 'selected' );
 				$( '.case-study-brand-photos' ).html( results );
 			} );
 		},
@@ -129,6 +146,8 @@ var ConsensusFrontUI = ( function( $, wp ) {
 				id: termid,
 				nonce: this.data.nonce
 			} ).always( function( results ) {
+				$( '.case-study-type' ).removeClass( 'selected' );
+				$( '.case-study-type[data-cs-type="' + termid + '-type"]' ).addClass( 'selected' );
 				$( '.case-study-left' ).html( results );
 			} );
 		},
@@ -143,7 +162,8 @@ var ConsensusFrontUI = ( function( $, wp ) {
 			$( '.section-image-right' ).addClass( 'show' );
 			$( '.section-image-top' ).addClass( 'show' );
 			$( '.section-logo svg' ).addClass( 'engage' );
-			setTimeout(function() { $( '.section-logo .home-animation-scroll' ).addClass( 'engage' ); }, 3500);
+
+			setTimeout(function() { if ( ! $(' .section-logo svg' ).hasClass('disengage') ) { $( '.section-logo .home-animation-scroll' ).addClass( 'engage' ); } }, 3500);
 
 			// On first scroll.
 			$( document ).one('mousewheel', function() {
@@ -170,7 +190,7 @@ var ConsensusFrontUI = ( function( $, wp ) {
 
 				// Scroll to section 2.
 				$('html,body').animate({
-					scrollTop: $( '#home-section-2' ).offset().top
+					scrollTop: $( '#home-section-2' ).offset().top + 100
 				}, 3500);
 
 				$( '.section-image' ).removeClass( 'scroll-animate' );
@@ -184,6 +204,22 @@ var ConsensusFrontUI = ( function( $, wp ) {
 			$( '.section-image' ).addClass( 'scroll-animate' );
 			$( '.section-image-right' ).addClass( 'scroll-animate' );
 			$( '.section-image-top' ).addClass( 'scroll-animate' );
+		},
+
+		/**
+		 * Get all the use cases for the supplied type id.
+		 *
+		 * @param id
+		 * @param container
+		 */
+		getAllPort: function( id, container ) {
+			wp.ajax.post( 'get_brands', {
+				id: id,
+				all: true,
+				nonce: this.data.nonce
+			} ).always( function( results ) {
+				container.html( results );
+			} );
 		}
 	};
 } )( window.jQuery, window.wp );

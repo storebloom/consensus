@@ -333,7 +333,7 @@ class Custom_Fields {
 				);
 				break;
 			case 'leadership':
-				$work_field    = $this->create_custom_field( $postid, 'leaership-section-consensus', 'workdate', 'text' );
+				$work_field    = $this->create_custom_field( $postid, 'leadership-section-consensus', 'workdate', 'text' );
 				$metabox_array = array(
 					array(
 						'id'          => 'leadership-section-consensus',

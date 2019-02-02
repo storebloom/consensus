@@ -1,0 +1,105 @@
+.portfolio-section {
+  padding: 0 5% 150px;
+
+  .portfolio-title {
+    font-size: 30px;
+    font-weight: 900;
+    margin-bottom: 30px;
+    display: inline;
+    background-position: 0px .8em;
+    background-repeat: repeat-x;
+    background-size: 12px 14px;
+  }
+
+  &:first-child {
+    .portfolio-title {
+      background-image: linear-gradient(to right, #ff1b1bc7 75%, #ff1b1bc7 75%);
+    }
+  }
+
+  &:nth-child(2) {
+    .portfolio-title {
+      background-image: linear-gradient(to right, rgba(38, 42, 158, 0.71) 75%, rgba(38, 42, 158, 0.71) 75%);
+    }
+  }
+
+  &:nth-child(3) {
+    .portfolio-title {
+      background-image: linear-gradient(to right, rgba(255, 191, 50, 0.71) 75%, rgba(255, 191, 50, 0.71) 75%);
+    }
+  }
+
+  .portfolio-desc {
+    margin: 30px 0 80px;
+  }
+
+  .portfolio-brands {
+    display: flex;
+    justify-content: space-between;
+    transition: height 1s ease;
+
+    a.portfolio-brands-item {
+      width: 20%;
+      border: 1px solid #cccccc;
+      color: #000000;
+      text-decoration: none;
+
+      .portfolio-brand-logos {
+        background: #868686;
+        padding: 15% 15% 0;
+        transition: all 1s ease;
+
+        img {
+          margin-bottom: 5%;
+        }
+      }
+
+      .portfolio-use-case-title {
+        font-weight: 600;
+        font-size: 18px;
+        padding: 20px 20px 40px;
+        display: block;
+        position: relative;
+
+        span {
+          font-size: 12px;
+          font-weight: 500;
+          display: block;
+          padding-bottom: 15px;
+        }
+
+        .read-more-port {
+          opacity: 0;
+          color: #192798;
+          transition: all 1s ease;
+          position: absolute;
+          bottom: 5px;
+          right: 20px;
+          text-transform: uppercase;
+          font-size: 12px;
+          font-weight: 900;
+          text-decoration: none;
+        }
+      }
+
+      &:hover {
+        .portfolio-brand-logos {
+          background: #0061AF;
+        }
+
+        .read-more-port {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  .portfolio-see-all {
+    text-align: center;
+    margin-top: 30px;
+    text-transform: uppercase;
+    color: #192798;
+    font-weight: 900;
+    font-size: 14px;
+  }
+}

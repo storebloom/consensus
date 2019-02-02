@@ -31,14 +31,15 @@
 					)
 				));
 
-				foreach( $brands as $brand ) : ?>
-					<div data-brand="<?php echo esc_attr( $brand->ID ); ?>" class="case-study-brand">
+				foreach( $brands as $brand_num => $brand ) : ?>
+					<div data-brand="<?php echo esc_attr( $brand->ID ); ?>" class="case-study-brand<?php echo 0 === $brand_num ? esc_attr( ' selected' ) : ''; ?>">
 						<?php echo esc_html( $brand->post_title ); ?>
 					</div>
 				<?php
 				endforeach;
 
-				$photos = get_section_info( 'use-case-section', 'consensus', $brands[0]->ID )['images'];
+				$photos = get_section_info( 'use-case-section', 'consensus', $brands[0]->ID );
+				$photos = isset( $photos['images'] ) ? $photos['images'] : array();
 				?>
 			</div>
 			<div class="case-study-brand-photos">
@@ -48,8 +49,8 @@
 			</div>
 		</div>
 		<div class="case-study-right">
-			<?php foreach( $types as $type ) : ?>
-				<div data-cs-type="<?php echo esc_html( $type->term_id . '-type' ); ?>" class="case-study-type">
+			<?php $count = count( $types ) - 1; foreach( array_reverse( $types ) as $type_num => $type ) : ?>
+				<div data-cs-type="<?php echo esc_html( $type->term_id . '-type' ); ?>" class="case-study-type<?php echo $count === $type_num ? esc_attr( ' selected' ) : ''; ?>">
 					<?php echo esc_html( $type->name ); ?>
 				</div>
 			<?php endforeach; ?>

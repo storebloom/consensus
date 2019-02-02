@@ -8,7 +8,7 @@
  */
 
 ?>
-<div id="home-section-7" class="home-section grey">
+<div id="home-section-7" class="home-section">
 	<div class="left-section">
 		<?php if ( isset( $section_info['image'] ) && '' !== $section_info['image'] ) : ?>
 			<div class="section-image blue-back">

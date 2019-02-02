@@ -20,7 +20,7 @@
 		<?php
 		$brands = get_posts(array(
 			'post_type' => 'use-case',
-			'numberposts' => 10,
+			'numberposts' => -1,
 			'tax_query' => array(
 				array(
 					'taxonomy' => 'type',
@@ -31,16 +31,21 @@
 			)
 		));
 
-		foreach( $brands as $brand ) :
-			$usecase = get_section_info( 'use-case-section', 'consensus', $brand->ID );
-			$logos = isset( $usecase['logos'] ) ? $usecase['logos'] : '';
-			$subtitle = isset( $usecase['subtitle'] ) ? $usecase['subtitle'] : '';
-			$link = get_post_permalink( $brand->ID );
+		foreach( $brands as $brand_num => $brand ) :
+			if ( 10 > $brand_num ) {
+				$usecase  = get_section_info( 'use-case-section', 'consensus', $brand->ID );
+				$logos    = isset( $usecase['logos'] ) ? $usecase['logos'] : '';
+				$subtitle = isset( $usecase['subtitle'] ) ? $usecase['subtitle'] : '';
+				$link     = get_post_permalink( $brand->ID );
 
-			include locate_template( 'template-parts/portfolio-2.php' );
+				include locate_template( 'template-parts/portfolio-2.php' );
+			}
 		endforeach; ?>
 	</div>
-	<div class="portfolio-see-all" data-type="<?php echo esc_attr( $type->term_id ); ?>">
-		<?php echo esc_html__( 'See All', 'consensus-custom' ); ?>
-	</div>
+
+	<?php if ( count( $brands ) > 10 ) : ?>
+		<div class="portfolio-see-all" data-type="<?php echo esc_attr( $type->term_id ); ?>">
+			<?php echo esc_html__( 'See All', 'consensus-custom' ); ?>
+		</div>
+	<?php endif; ?>
 </div>
